@@ -28,7 +28,7 @@ const rulesConfig = {
 ```js
 const notValidMarkers = {}; // not used
 // initialize the validation instance with node.name as the default id
-const { field, OK, addValidator, fieldValues, runRuleChains, setNotValid } = validate(
+const { field, OK, addValidator, runRuleChains, setNotValid } = validate(
   // markDefault 0: no-border and no-text, 1: red-border 2: text 3: red-border and text
   { rulesConfig, lazy: true, markDefault: 3, alertBelow: 0 },
   // callback not used

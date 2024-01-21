@@ -1,10 +1,11 @@
 <script>
-	import { validate } from '$lib/validate.svelte.js';
+	import { validate } from '$lib/validate';
 
 	let { close } = $props();
 
 	let restart = $state(false);
 	let submitOK = $state(true);
+	let form = $state();
 
 	const year = new Date().getFullYear();
 
@@ -46,7 +47,7 @@
 
 	const notValidMarkers = {}; // not used
 	// initialize the validation instance with node.name as the default id
-	const { field, OK, Clear, addValidator, fieldValues, runRuleChains, setNotValid } = validate(
+	const { field, OK, Clear, addValidator, runRuleChains, setNotValid } = validate(
 		// markDefault 0: no-border and no-text, 1: red-border 2: text 3: red-border and text
 		{ rulesConfig, lazy: true, markDefault: 3, alertBelow: 0 }
 	);
@@ -70,26 +71,28 @@
 	});
 
 	// reset values and clear errors
-	function reset() {
+	function reset(e) {
+		e.stopPropagation();
 		({ day, month, name, experience, html, css, js, jsSkills, other } = history);
-    submitOK = true;
+		submitOK = true;
 		Clear();
 	}
 
-	function commitForm() {
-		submitOK = OK();
-		console.log('submit: check all rules using OK()', submitOK);
-		if (submitOK) {
-			console.log('validation OK result', { ...fieldValues });
-			close();
+	// form submission results
+	function submitForm(e) {
+		console.log('submitter:', e.submitter.id);
+		const formData = new FormData(e.target);
+		for (let [key, value] of formData) {
+			console.log(`${key} : ${value}`);
 		}
-		return false;
+		close();
 	}
-	$effect(() => {
-		// runs when the component is mounted, and again whenever values change, after the DOM has been updated
-		console.log("submitOK", submitOK, "fieldValues", { ...fieldValues }); // fieldValues.day, fieldValues.month);
-	});
-	// $inspect('values', fieldValues, submitOK);
+
+	const checkOkAndSubmit = (e) => {
+		e.preventDefault();
+		submitOK = OK();
+		if (submitOK) form.requestSubmit(e.target);
+	};
 </script>
 
 <div>
@@ -97,7 +100,7 @@
 	<button class="right" onclick={close}>Close</button>
 </div>
 
-<form id="myform" action="get">
+<form onsubmit={submitForm} bind:this={form} method="dialog">
 	<fieldset>
 		<legend><h3>Svelte-5 Use Validate Example</h3></legend>
 
@@ -190,15 +193,15 @@
 
 			<div class="grd-AB label">Form</div>
 			<div class="grd-BZ button-bar">
-				<button type="reset" on:click|preventDefault={reset}>Reset</button>
+				<button type="reset" onclick={reset}>Reset</button>
 				<div class:hidden={submitOK} class="submit-nok"><b>Latest submit blocked</b></div>
-				<button type="submit" on:click|preventDefault={commitForm}>Submit</button>
+				<button id="example" type="submit" onclick={checkOkAndSubmit}>Submit</button>
 			</div>
 		</div>
 	</fieldset>
 </form>
 
-<p class="center"><i>console logs contains validated fieldValues</i></p>
+<p class="center"><i>Console shows form data after successful submission</i></p>
 
 <style>
 	* {

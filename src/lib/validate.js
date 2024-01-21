@@ -9,18 +9,13 @@ export function validate(config, callback = null) { // callback depricated
   // mark 0: no-border and no-text, 1: red-border 2: text 3: red-border and text
   const { rulesConfig, nodeKey = "name", lazy = true, markDefault = 3, alertBelow = 0 } = config;
 
-  // eslint-disable-next-line no-undef
-  let runRuleChains = $state({}); // runRuleChains {[id]: closure} to rerun validation or update chain
-  // eslint-disable-next-line no-undef
-  let fieldValues = $state({});  // validated form values: {[id]: value}
-
-  let nodeContext = {}; // used to clear errors: reset setNotValid
-  const alertNodes = {};  // alert msg nodes
+  const runRuleChains = {}; // runRuleChains {[id]: closure} to rerun validation or update chain
+  const nodeContext = {};   // used to clear error nodes: reset setNotValid
+  const alertNodes = {};    // alert msg nodes
 
   const [validators, setNotValid] = getValidators(alertBelow, alertNodes);
 
   return {
-    fieldValues,  // validated field values 
     runRuleChains, // run ruleChain closures
     setNotValid,  // setNotValid if we need it to add a addValidator with: return setNotValid()
 
@@ -55,12 +50,9 @@ export function validate(config, callback = null) { // callback depricated
           value = ctx.value;
         }
 
-        // ruleChain finished, set field results
-        if (value !== fieldValues[id]) {
-          fieldValues[id] = value;
-          // callback to pass node validation result
-          if (callback) callback(id, notValid, value);
-        }
+        // callback to pass node validation result
+        if (callback) callback(id, notValid, value);
+
         return notValid;
       };
 
