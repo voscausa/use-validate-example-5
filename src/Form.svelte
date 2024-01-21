@@ -95,8 +95,9 @@
 	<fieldset>
 		<legend><h3>Svelte-5 Use Validate Example</h3></legend>
 
-		<div class="formgrid">
-			<div class="bar-inputs">
+		<div class="wrapper dialog-size">
+			<div class="grd-AB label">Date</div>
+			<div class="grd-BZ">
 				<input
 					class="center"
 					id="day"
@@ -120,39 +121,54 @@
 				/>
 				- {year}
 			</div>
-			<div class="label">Date</div>
 
-			<input id="name" name="name" type="text" use:field={name} bind:value={name} />
-			<label for="name">Name</label>
+			<label class="grd-AB" for="name">Name</label>
+			<input class="grd-BZ" id="name" name="name" type="text" use:field={name} bind:value={name} />
 
-			<select id="experience" name="experience" use:field={experience} bind:value={experience}>
+			<label class="grd-AB" for="experience">Experience</label>
+			<select
+				class="grd-BZ"
+				id="experience"
+				name="experience"
+				use:field={experience}
+				bind:value={experience}
+			>
 				<option value="">select experience option</option>
 				<option value="1">1 year or less</option>
 				<option value="2">2 years</option>
 				<option value="3">3 - 4 years</option>
 				<option value="5">5 years or more</option>
 			</select>
-			<label for="experience">Experience</label>
 
-			<input id="html" name="html" type="checkbox" use:field={html} bind:checked={html} />
-			<label for="html">HTML</label>
+			<label class="grd-AB" for="html">HTML</label>
+			<input
+				class="grd-BC"
+				id="html"
+				name="html"
+				type="checkbox"
+				use:field={html}
+				bind:checked={html}
+			/>
 
+			<label class="grd-AB label" for="css">CSS (optional)</label>
 			<input
 				id="css"
 				name="css"
 				type="checkbox"
+				class="grd-BC"
 				class:hidden={html === false}
 				use:field={css}
 				bind:checked={css}
 			/>
-			<label for="css">CSS (optional)</label>
 
-			<input id="js" name="js" type="checkbox" use:field={js} bind:checked={js} />
-			<label for="js">Javascript</label>
+			<label class="grd-AB" for="js">Javascript</label>
+			<input class="grd-BC" id="js" name="js" type="checkbox" use:field={js} bind:checked={js} />
 
+			<label class="grd-AB" for="jsSkills">Js skills (optional)</label>
 			<select
 				id="jsSkills"
 				name="jsSkills"
+				class="grd-BZ"
 				class:hidden={js === false}
 				use:field={jsSkills}
 				bind:value={jsSkills}
@@ -162,25 +178,47 @@
 				<option value="2">browser / V8 client side</option>
 				<option value="3">Client + server side</option>
 			</select>
-			<label for="experience">Js skills (optional)</label>
 
+			<label class="grd-AB" for="other">Other skills</label>
 			<textarea id="other" name="other" rows="6" cols="20" use:field={other} bind:value={other} />
-			<label for="other">Other skills</label>
 
-			<div class="bar-inputs bar">
+			<div class="grd-AB label">Form</div>
+			<div class="grd-BZ button-bar">
 				<button type="reset" on:click|preventDefault={reset}>Reset</button>
-				<div class:submit-ok={submitOK} class="submit-nok"><b>Submit NOT OK</b></div>
+				<div class:hidden={submitOK} class="submit-nok"><b>Submit NOT OK</b></div>
 				<button type="submit" on:click|preventDefault={commitForm}>Submit</button>
 			</div>
-			<div class="label">Form</div>
-			<div class="bar-inputs">console logs contain validated fieldValues</div>
 		</div>
 	</fieldset>
 </form>
 
+<div class="center">console logs contain validated fieldValues</div>
+
 <style>
 	* {
 		box-sizing: border-box;
+	}
+	.dialog-size {
+		width: 35em;
+		margin: 0 2em;
+	}
+	.wrapper {
+		display: grid;
+		grid-template-columns: 1fr 1em 3fr;
+		justify-items: start;
+		align-items: center;
+		column-gap: 1em;
+    row-gap: 1.5em;
+		grid-auto-flow: row;
+	}
+	.grd-AB {
+		grid-column: 1/2;
+	}
+	.grd-BC {
+		grid-column: 2/3;
+	}
+	.grd-BZ {
+		grid-column: 2/-1;
 	}
 	.right {
 		float: right;
@@ -216,18 +254,8 @@
 	}
 	label,
 	.label {
-		box-sizing: border-box;
 		user-select: none;
 		cursor: pointer;
-	}
-	.bar-inputs:focus-within + .label,
-	input:focus + label,
-	textarea:focus + label,
-	select:focus + label {
-		text-decoration: underline;
-	}
-	.float-right {
-		float: right !important;
 	}
 	.center {
 		text-align: center;
@@ -235,30 +263,10 @@
 	.hidden {
 		visibility: hidden;
 	}
-	.submit-ok {
-		visibility: hidden;
-	}
 	.submit-nok {
 		color: red;
 	}
-	/* grid layout */
-	.formgrid {
-		display: grid;
-		grid-template-columns: 1fr 1em 3fr;
-		grid-gap: 1.5em 0.6em;
-		justify-items: start;
-		grid-auto-flow: column;
-	}
-
-	input,
-	textarea,
-	select,
-	.bar-inputs {
-		grid-column: 2 / 4;
-		width: auto;
-		margin: 0;
-	}
-	.bar {
+	.button-bar {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
