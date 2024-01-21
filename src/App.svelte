@@ -4,7 +4,8 @@
 	let dialog = $state();
 	let restart = $state(false);
 
-	const close = () => {
+	const close = (e) => {
+		if (e) e.stopPropagation();
 		restart = true;
 		// restart Form = re-init Form
 		setTimeout(() => (restart = false), 0);
