@@ -1,6 +1,6 @@
 {
   "name": "@voscausa/use-validate-example",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "voscausa",
   "repository": {
     "type": "git",
@@ -8,8 +8,10 @@
   },
   "keywords": [
     "svelte",
+    "runes",
     "actions",
     "form",
+    "modal",
     "inputs",
     "validate"
   ],
