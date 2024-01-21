@@ -1,6 +1,6 @@
 # use-validate example
 
-A Svelte-Vite SPA to validate an example form  
+A Svelte-Vite SPA to validate an example form using runes  
 Example use of : [@voscausa/svelte-use-validate](https://github.com/voscausa/svelte-use-validate)
 
 ![example](./example%20form.png)

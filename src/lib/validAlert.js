@@ -4,7 +4,6 @@ const alertStyle = {
   padding: "0 0",
   fontSize: ".8rem",
   pointerEvents: "none",
-  "z-index": 10000,
 };
 
 export function validAlert(below = 0) {
@@ -23,7 +22,8 @@ export function validAlert(below = 0) {
       alert.style.left = `${left}px`;
     }
 
-    document.body.appendChild(alert);
+    let root = node.closest("dialog") ? document.querySelector("dialog") : document.body;
+    root.appendChild(alert);
     position();
 
     return {
@@ -34,7 +34,6 @@ export function validAlert(below = 0) {
           alert.textContent = txt;
         }
       },
-
       destroy() {
         alert.remove();
       }

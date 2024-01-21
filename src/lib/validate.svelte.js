@@ -13,8 +13,6 @@ export function validate(config, callback = null) { // callback depricated
   // eslint-disable-next-line no-undef
   let fieldValues = $state({});  // validated form values: {[id]: value}
   let nodeContext = {}; // used to clear errors: reset setNotValid
-
-
   const alertNodes = {};  // alert msg nodes
 
   const [validators, setNotValid] = getValidators(alertBelow, alertNodes);

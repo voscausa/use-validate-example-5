@@ -89,7 +89,10 @@
 	$inspect('values', fieldValues, submitOK);
 </script>
 
-<button class="right" onclick={close}>Close</button>
+<div>
+	<i>Modal dialog: press Close or use ESC-key to close without a form submit</i>
+	<button class="right" onclick={close}>Close</button>
+</div>
 
 <form id="myform" action="get">
 	<fieldset>
@@ -108,7 +111,7 @@
 					bind:value={day}
 					placeholder="dd"
 				/>
-				-
+				<span class="date-sep">-</span>
 				<input
 					class="center"
 					id="month"
@@ -119,7 +122,7 @@
 					bind:value={month}
 					placeholder="mm"
 				/>
-				- {year}
+				<span class="date-sep">-</span>{year}
 			</div>
 
 			<label class="grd-AB" for="name">Name</label>
@@ -185,14 +188,14 @@
 			<div class="grd-AB label">Form</div>
 			<div class="grd-BZ button-bar">
 				<button type="reset" on:click|preventDefault={reset}>Reset</button>
-				<div class:hidden={submitOK} class="submit-nok"><b>Submit NOT OK</b></div>
+				<div class:hidden={submitOK} class="submit-nok"><b>Latest submit blocked</b></div>
 				<button type="submit" on:click|preventDefault={commitForm}>Submit</button>
 			</div>
 		</div>
 	</fieldset>
 </form>
 
-<div class="center">console logs contain validated fieldValues</div>
+<p class="center"><i>console logs contains validated fieldValues</i></p>
 
 <style>
 	* {
@@ -208,7 +211,7 @@
 		justify-items: start;
 		align-items: center;
 		column-gap: 1em;
-    row-gap: 1.5em;
+		row-gap: 1.5em;
 		grid-auto-flow: row;
 	}
 	.grd-AB {
@@ -256,6 +259,10 @@
 	.label {
 		user-select: none;
 		cursor: pointer;
+	}
+	.date-sep {
+		/* make some space for error msg */
+		margin: 0.5em;
 	}
 	.center {
 		text-align: center;

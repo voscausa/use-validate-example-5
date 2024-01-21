@@ -12,7 +12,7 @@
 	};
 </script>
 
-<button onclick={() => dialog.show()}>Open example</button>
+<button onclick={() => dialog.showModal()}>Open example</button>
 
 <dialog bind:this={dialog}>
 	{#if !restart}<Form {close} />{/if}
