@@ -9,9 +9,11 @@ export function validate(config, callback = null) { // callback depricated
   // mark 0: no-border and no-text, 1: red-border 2: text 3: red-border and text
   const { rulesConfig, nodeKey = "name", lazy = true, markDefault = 3, alertBelow = 0 } = config;
 
-  let runRuleChain = {}; // runRuleChain {[id]: closure} to rerun validation or update chain
+  // eslint-disable-next-line no-undef
+  let runRuleChains = $state({}); // runRuleChains {[id]: closure} to rerun validation or update chain
   // eslint-disable-next-line no-undef
   let fieldValues = $state({});  // validated form values: {[id]: value}
+
   let nodeContext = {}; // used to clear errors: reset setNotValid
   const alertNodes = {};  // alert msg nodes
 
@@ -19,7 +21,7 @@ export function validate(config, callback = null) { // callback depricated
 
   return {
     fieldValues,  // validated field values 
-    runRuleChain, // run ruleChain closures
+    runRuleChains, // run ruleChain closures
     setNotValid,  // setNotValid if we need it to add a addValidator with: return setNotValid()
 
     field(node, obj) {
@@ -33,7 +35,7 @@ export function validate(config, callback = null) { // callback depricated
       let ruleChain = rulesConfig[id]; // enclose ruleChain
 
       // inner closure to validate node value: apply rule chain (array / chain of rules)
-      runRuleChain[id] = (altRuleChain = null) => {
+      runRuleChains[id] = (altRuleChain = null) => {
         if (altRuleChain !== null) ruleChain = altRuleChain;
 
         let notValid = false;
@@ -62,14 +64,14 @@ export function validate(config, callback = null) { // callback depricated
         return notValid;
       };
 
-      if (!lazy) runRuleChain[id]();
+      if (!lazy) runRuleChains[id]();
 
       return {
         // value update and optional controls update
         update(obj) {
           // value = object (and not an array object) or a value
           ({ value, controls =[] } = isObj(obj) ? obj : { value: obj });
-          runRuleChain[id]();
+          runRuleChains[id]();
         },
 
         destroy() {
@@ -81,19 +83,21 @@ export function validate(config, callback = null) { // callback depricated
 
     // submit = OK()
     OK() {
-      // re-run all the runRuleChains (closures) to make sure we have them all
-      return Object.values(runRuleChain).reduce((a, c) => !c() && a, true);
+      // re-run all the runRuleChainss (closures) to make sure we have them all
+      return Object.values(runRuleChains).reduce((a, c) => !c() && a, true);
     },
 
     Clear() {
-      // clear errors to finalize the reset
-      Object.values(nodeContext).forEach((ctx) => setNotValid(ctx, false, ""));
+      // finalize the reset: Clear errors
+      setTimeout(() => Object.values(nodeContext).forEach((ctx) => {
+        setNotValid(ctx, false, "");
+      }), 0);
     },
 
     // add a validator function
     addValidator(validator, func) {
       if (validators[validator] === undefined) validators[validator] = func;
-    },
+    }
   };
 
 }

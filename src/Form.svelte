@@ -46,7 +46,7 @@
 
 	const notValidMarkers = {}; // not used
 	// initialize the validation instance with node.name as the default id
-	const { field, OK, Clear, addValidator, fieldValues, runRuleChain, setNotValid } = validate(
+	const { field, OK, Clear, addValidator, fieldValues, runRuleChains, setNotValid } = validate(
 		// markDefault 0: no-border and no-text, 1: red-border 2: text 3: red-border and text
 		{ rulesConfig, lazy: true, markDefault: 3, alertBelow: 0 }
 	);
@@ -60,8 +60,8 @@
 
 	// add a validator which updates jsSkill rules based on js bool
 	addValidator('updateJsSkillRules', function () {
-		if ('jsSkills' in runRuleChain)
-			runRuleChain.jsSkills(
+		if ('jsSkills' in runRuleChains)
+			runRuleChains.jsSkills(
 				// require skill for js
 				this.value ? 'required' : 'get'
 			);
@@ -72,8 +72,8 @@
 	// reset values and clear errors
 	function reset() {
 		({ day, month, name, experience, html, css, js, jsSkills, other } = history);
+    submitOK = true;
 		Clear();
-		submitOK = true;
 	}
 
 	function commitForm() {
@@ -85,8 +85,11 @@
 		}
 		return false;
 	}
-
-	$inspect('values', fieldValues, submitOK);
+	$effect(() => {
+		// runs when the component is mounted, and again whenever values change, after the DOM has been updated
+		console.log("submitOK", submitOK, "fieldValues", { ...fieldValues }); // fieldValues.day, fieldValues.month);
+	});
+	// $inspect('values', fieldValues, submitOK);
 </script>
 
 <div>

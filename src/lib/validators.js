@@ -36,7 +36,7 @@ export function getValidators(alertBelow, alertNodes) { // validObj not used yet
   }
 
   // rule format: {validator: {arguments...} } 
-  // runRuleChain will then run: validator(arguments) with ctx
+  // runRuleChains will then run: validator(arguments) with ctx
   return [
     {
 
@@ -58,7 +58,6 @@ export function getValidators(alertBelow, alertNodes) { // validObj not used yet
         const notValid = (month && !isNaN(month))
           ? !validDay({ year, month, day })
           : false;
-        console.log("AN", alertNodes)
         return setNotValid(this, notValid, msg);
       },
 

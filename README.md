@@ -28,7 +28,7 @@ const rulesConfig = {
 ```js
 const notValidMarkers = {}; // not used
 // initialize the validation instance with node.name as the default id
-const { field, OK, addValidator, fieldValues, runRuleChain, setNotValid } = validate(
+const { field, OK, addValidator, fieldValues, runRuleChains, setNotValid } = validate(
   // markDefault 0: no-border and no-text, 1: red-border 2: text 3: red-border and text
   { rulesConfig, lazy: true, markDefault: 3, alertBelow: 0 },
   // callback not used
@@ -53,8 +53,8 @@ Toggle between "required" and "get" rules controlled by "js" field value.
 ```js
 // add a validator which updates jsSkill rules based on js bool
 addValidator("updateJsSkillRules", function () {
-  if ("jsSkills" in runRuleChain)
-    runRuleChain.jsSkills(
+  if ("jsSkills" in runRuleChains)
+    runRuleChains.jsSkills(
       // require skill for js
       this.value ? "required" : "get"
     );
