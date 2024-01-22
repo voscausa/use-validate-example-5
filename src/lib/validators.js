@@ -36,7 +36,7 @@ export function getValidators(alertBelow, alertNodes) { // validObj not used yet
   }
 
   // rule format: {validator: {arguments...} } 
-  // runRuleChains will then run: validator(arguments) with ctx
+  // ruleChains will then run: validator(arguments) with ctx
   return [
     {
 

@@ -9,16 +9,14 @@ export function validate(config, callback = null) { // callback depricated
   // mark 0: no-border and no-text, 1: red-border 2: text 3: red-border and text
   const { rulesConfig, nodeKey = "name", lazy = true, markDefault = 3, alertBelow = 0 } = config;
 
-  const runRuleChains = {}; // runRuleChains {[id]: closure} to rerun validation or update chain
-  const nodeContext = {};   // used to clear error nodes: reset setNotValid
-  const alertNodes = {};    // alert msg nodes
+  const ruleChains = {};  // ruleChains {[id]: closure} to rerun validation or update chain
+  const nodeContext = {}; // used to clear error nodes: reset setNotValid
+  const alertNodes = {};  // alert msg nodes
 
   const [validators, setNotValid] = getValidators(alertBelow, alertNodes);
 
   return {
-    runRuleChains, // run ruleChain closures
     setNotValid,  // setNotValid if we need it to add a addValidator with: return setNotValid()
-
     field(node, obj) {
       // value = object (and not an array object) or value or values array
       // examples: {value: value, mark: false, controls: [control values] } or value
@@ -30,7 +28,7 @@ export function validate(config, callback = null) { // callback depricated
       let ruleChain = rulesConfig[id]; // enclose ruleChain
 
       // inner closure to validate node value: apply rule chain (array / chain of rules)
-      runRuleChains[id] = (altRuleChain = null) => {
+      ruleChains[id] = (altRuleChain = null) => {
         if (altRuleChain !== null) ruleChain = altRuleChain;
 
         let notValid = false;
@@ -39,7 +37,7 @@ export function validate(config, callback = null) { // callback depricated
           const [validator, options] = (typeof rule === "object") ? Object.entries(rule)[0] : [rule, {}];
 
           // validator ctx (this context): {id, node, mark, value, [rest]}
-          const ctx = { id, node, mark, value };
+          const ctx = { id, node, mark, value, ruleChains };
           // we allow an array of controls
           ctx.controls = Array.isArray(controls) ? controls : [controls];
           nodeContext[id] = ctx;
@@ -56,16 +54,15 @@ export function validate(config, callback = null) { // callback depricated
         return notValid;
       };
 
-      if (!lazy) runRuleChains[id]();
+      if (!lazy) ruleChains[id]();
 
       return {
         // value update and optional controls update
         update(obj) {
           // value = object (and not an array object) or a value
           ({ value, controls =[] } = isObj(obj) ? obj : { value: obj });
-          runRuleChains[id]();
+          ruleChains[id]();
         },
-
         destroy() {
           // we do not need to validate this message node anymore
           if (id in alertNodes) alertNodes[id].destroy();
@@ -75,8 +72,8 @@ export function validate(config, callback = null) { // callback depricated
 
     // submit = OK()
     OK() {
-      // re-run all the runRuleChainss (closures) to make sure we have them all
-      return Object.values(runRuleChains).reduce((a, c) => !c() && a, true);
+      // re-run all the ruleChainss (closures) to make sure we have them all
+      return Object.values(ruleChains).reduce((a, c) => !c() && a, true);
     },
 
     Clear() {

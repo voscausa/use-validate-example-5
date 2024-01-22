@@ -47,7 +47,7 @@
 
 	const notValidMarkers = {}; // not used
 	// initialize the validation instance with node.name as the default id
-	const { field, OK, Clear, addValidator, runRuleChains, setNotValid } = validate(
+	const { field, OK, Clear, addValidator, setNotValid } = validate(
 		// markDefault 0: no-border and no-text, 1: red-border 2: text 3: red-border and text
 		{ rulesConfig, lazy: true, markDefault: 3, alertBelow: 0 }
 	);
@@ -61,8 +61,8 @@
 
 	// add a validator which updates jsSkill rules based on js bool
 	addValidator('updateJsSkillRules', function () {
-		if ('jsSkills' in runRuleChains)
-			runRuleChains.jsSkills(
+		if ('jsSkills' in this.ruleChains)
+			this.ruleChains.jsSkills(
 				// require skill for js
 				this.value ? 'required' : 'get'
 			);
@@ -188,8 +188,8 @@
 				<option value="3">Client + server side</option>
 			</select>
 
-			<label class="grd-AB" for="other">Other skills</label>
-			<textarea id="other" name="other" rows="6" cols="20" use:field={other} bind:value={other} />
+			<label class="grd-AB" for="other">Other skills (words)</label>
+			<textarea class="grd-BZ" id="other" name="other" rows="6" cols="25" use:field={other} bind:value={other} />
 
 			<div class="grd-AB label">Form</div>
 			<div class="grd-BZ button-bar">

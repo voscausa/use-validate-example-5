@@ -28,7 +28,6 @@ export function validAlert(below = 0) {
 
     return {
       update(txt) { // update txt only (do not use an array!)
-
         if (txt !== text) {
           text = txt;
           alert.textContent = txt;
