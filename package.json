@@ -1,6 +1,6 @@
 {
   "name": "@voscausa/use-validate-example",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "author": "voscausa",
   "repository": {
     "type": "git",
@@ -32,8 +32,5 @@
     "prettier-plugin-svelte": "^3.1.2",
     "svelte": "^5.0.0-next.1",
     "vite": "^5.0.3"
-  },
-  "dependencies": {
-    "@voscausa/svelte-use-validate": "github:voscausa/svelte-use-validate"
   }
 }
