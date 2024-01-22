@@ -31,23 +31,26 @@ export function validate(config, callback = null) { // callback depricated
         if (altRuleChain !== null) ruleChain = altRuleChain;
 
         let notValid = false;
-        // run the rulechain array: {validator: { options}} or chain: [validator obj, ..] or "validator"
+        // run the rulechain array for each rule until (break) not valid or all rules are valid 
+        // rule { validator: { options } } or chain: [validator obj, ..] or "validator"
         for (const rule of Array.isArray(ruleChain) ? ruleChain : [ruleChain]) {
           const [validator, options] = (typeof rule === "object") ? Object.entries(rule)[0] : [rule, {}];
 
-          // validator ctx (this context): {id, node, mark, value, [rest]}
+          // validator ctx (becomes this context): {id, node, mark, value, [rest]}
           const ctx = { id, node, mark, value, ruleChains };
           // we allow an array of controls
+          // use controls to pass addtional data to the the validator 
           ctx.controls = Array.isArray(controls) ? controls : [controls];
           nodeContext[id] = ctx;
 
           notValid = validators[validator].call(ctx, options, setNotValid);
-          // break the chain if notValid was returned
+          // break the chain if rul not valid
           if (notValid) break;
+          // use the callback to update the value
           value = ctx.value;
         }
 
-        // callback to pass node validation result
+        // use callback to pass node validation result
         if (callback) callback({ id, notValid, value });
 
         return notValid;

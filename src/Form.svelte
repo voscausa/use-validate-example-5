@@ -6,7 +6,6 @@
 	let restart = $state(false);
 	let submitOK = $state(true);
 	let form = $state();
-	let diff = $state(false);
 
 	const year = new Date().getFullYear();
 
@@ -46,6 +45,11 @@
 		if (!js) jsSkills = history.jsSkills;
 	});
 
+	let diff = $derived(
+		JSON.stringify(history) ===
+			JSON.stringify({ day, month, name, experience, html, css, js, jsSkills, other })
+	);
+
 	const notValidMarkers = {}; // not used
 	// initialize the validation instance with node.name as the default id
 	const { field, OK, Clear, addValidator } = validate(
@@ -69,12 +73,6 @@
 			);
 		// this section validator is always OK, so return false
 		return false;
-	});
-
-	$effect(() => {
-		diff =
-			JSON.stringify(history) ===
-			JSON.stringify({ day, month, name, experience, html, css, js, jsSkills, other });
 	});
 
 	// reset values and clear errors
@@ -101,7 +99,7 @@
 		if (submitOK) form.requestSubmit(e.target);
 	};
 
-	// $inspect(diff).with(console.trace);
+	// $inspect(diff, submitOK).with(console.trace);
 </script>
 
 <div>
