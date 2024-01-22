@@ -6,6 +6,7 @@
 	let restart = $state(false);
 	let submitOK = $state(true);
 	let form = $state();
+	let diff = $state(false);
 
 	const year = new Date().getFullYear();
 
@@ -70,6 +71,12 @@
 		return false;
 	});
 
+	$effect(() => {
+		diff =
+			JSON.stringify(history) ===
+			JSON.stringify({ day, month, name, experience, html, css, js, jsSkills, other });
+	});
+
 	// reset values and clear errors
 	function reset(e) {
 		e.stopPropagation();
@@ -93,6 +100,8 @@
 		submitOK = OK();
 		if (submitOK) form.requestSubmit(e.target);
 	};
+
+	// $inspect(diff).with(console.trace);
 </script>
 
 <div>
@@ -201,7 +210,7 @@
 
 			<div class="grd-AB label">Form</div>
 			<div class="grd-BZ button-bar">
-				<button type="reset" onclick={reset}>Reset</button>
+				<button type="reset" class:hidden={diff} onclick={reset}>Reset</button>
 				<div class:hidden={submitOK} class="submit-nok"><b>Latest submit blocked</b></div>
 				<button id="example" type="submit" onclick={checkOkAndSubmit}>Submit</button>
 			</div>

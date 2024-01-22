@@ -48,7 +48,7 @@ export function validate(config, callback = null) { // callback depricated
         }
 
         // callback to pass node validation result
-        if (callback) callback(id, notValid, value);
+        if (callback) callback({ id, notValid, value });
 
         return notValid;
       };
@@ -85,7 +85,7 @@ export function validate(config, callback = null) { // callback depricated
     // add a custom validator function
     addValidator(validator, func) {
       if (validators[validator] === undefined) validators[validator] = func;
-    }
+    },
   };
 
 }
