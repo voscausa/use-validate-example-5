@@ -38,8 +38,14 @@ export function getValidators(alertBelow, alertNodes) { // validObj not used yet
   // rule format: {validator: {arguments...} } 
   // ruleChains will then run: validator(arguments) with ctx
   return [
+    setNotValid, 
+    
+    // a validator has three arguments:
+    // - this: chain context (ctx)
+    // - options: rule arguments
+    // - setNotValid function (used by custom validators)
+    
     {
-
       // signed numeric string / string isNot a Number 
       cents: function ({ trimZero = true, msg = "not a valid amount" }) {
         const { value = "" } = this;
@@ -114,6 +120,5 @@ export function getValidators(alertBelow, alertNodes) { // validObj not used yet
         return setNotValid(this, false, "");
       }
     },
-    setNotValid
   ];
 }

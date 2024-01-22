@@ -13,10 +13,9 @@ export function validate(config, callback = null) { // callback depricated
   const nodeContext = {}; // used to clear error nodes: reset setNotValid
   const alertNodes = {};  // alert msg nodes
 
-  const [validators, setNotValid] = getValidators(alertBelow, alertNodes);
+  const [setNotValid, validators] = getValidators(alertBelow, alertNodes);
 
   return {
-    setNotValid,  // setNotValid if we need it to add a addValidator with: return setNotValid()
     field(node, obj) {
       // value = object (and not an array object) or value or values array
       // examples: {value: value, mark: false, controls: [control values] } or value
@@ -42,7 +41,7 @@ export function validate(config, callback = null) { // callback depricated
           ctx.controls = Array.isArray(controls) ? controls : [controls];
           nodeContext[id] = ctx;
 
-          notValid = validators[validator].call(ctx, options);
+          notValid = validators[validator].call(ctx, options, setNotValid);
           // break the chain if notValid was returned
           if (notValid) break;
           value = ctx.value;
@@ -70,9 +69,9 @@ export function validate(config, callback = null) { // callback depricated
       };
     },
 
-    // submit = OK()
+    // submitOK = OK()
     OK() {
-      // re-run all the ruleChainss (closures) to make sure we have them all
+      // re-run all the ruleChains (closures) to make sure we have validated all fields
       return Object.values(ruleChains).reduce((a, c) => !c() && a, true);
     },
 
@@ -83,7 +82,7 @@ export function validate(config, callback = null) { // callback depricated
       }), 0);
     },
 
-    // add a validator function
+    // add a custom validator function
     addValidator(validator, func) {
       if (validators[validator] === undefined) validators[validator] = func;
     }

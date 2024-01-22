@@ -47,14 +47,14 @@
 
 	const notValidMarkers = {}; // not used
 	// initialize the validation instance with node.name as the default id
-	const { field, OK, Clear, addValidator, setNotValid } = validate(
+	const { field, OK, Clear, addValidator } = validate(
 		// markDefault 0: no-border and no-text, 1: red-border 2: text 3: red-border and text
 		{ rulesConfig, lazy: true, markDefault: 3, alertBelow: 0 }
 	);
 
-	// add a basic validator with setNotValid marker
-	addValidator('wordCount', function (obj) {
-		let { count = 2, msg = `number of words min ${count}` } = obj;
+	// add a basic validator with this.setNotValid marker
+	addValidator('wordCount', function (options, setNotValid) {
+		let { count = 2, msg = `number of words min ${count}` } = options;
 		const valid = this.value.split(' ').length >= count;
 		return setNotValid(this, !valid, msg);
 	});
@@ -189,7 +189,15 @@
 			</select>
 
 			<label class="grd-AB" for="other">Other skills (words)</label>
-			<textarea class="grd-BZ" id="other" name="other" rows="6" cols="25" use:field={other} bind:value={other} />
+			<textarea
+				class="grd-BZ"
+				id="other"
+				name="other"
+				rows="6"
+				cols="25"
+				use:field={other}
+				bind:value={other}
+			/>
 
 			<div class="grd-AB label">Form</div>
 			<div class="grd-BZ button-bar">

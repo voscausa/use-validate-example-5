@@ -26,25 +26,23 @@ const rulesConfig = {
 ### <b>Validate instance config</b>
 
 ```js
-const notValidMarkers = {}; // not used
 // initialize the validation instance with node.name as the default id
-const { field, OK, addValidator, ruleChains, setNotValid } = validate(
+const { field, OK, Clear, addValidator } = validate(
   // markDefault 0: no-border and no-text, 1: red-border 2: text 3: red-border and text
-  { rulesConfig, lazy: true, markDefault: 3, alertBelow: 0 },
-  // callback not used
-  (id, notValid, value) => {
-    // callback to update bindings or signal notValid components
-    if (id in notValidMarkers) notValidMarkers[id] = notValid;
-  }
+  { rulesConfig, lazy: true, markDefault: 3, alertBelow: 0 }, // callback not used
 );
 ```
+- field: use:field={binding, control} action
+- OK: OK() to validate all fields  
+- Clear: Clear() to clear all validation errors  
+- addValidator: to add a custom validator   
 
 ### <b>Custom validators</b>
 
 ```js
 // add a basic validator with setNotValid marker
-addValidator("wordCount", function (obj) {
-  let { count = 2, msg = `number of words min ${count}` } = obj;
+addValidator("wordCount", function (options, setNotValid) {
+  let { count = 2, msg = `number of words min ${count}` } = options;
   const valid = this.value.split(" ").length >= count;
   return setNotValid(this, !valid, msg);
 });
